@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"sample-manager/models"
 	pb "sample-manager/proto"
 
 	"sample-manager/db"
@@ -46,6 +47,27 @@ func (s *Server) GetSampleId(ctx context.Context, req *pb.GetRequest) (*pb.GetRe
 	resp := pb.GetResponse {
 		SampleItemId: sample_item_id,
 	}
-	
+
 	return &resp, nil
+}
+
+func (s *Server) CreateMapping(ctx context.Context, req *pb.CreateRequest) (*pb.CreateResponse, error) {
+	mapping := &models.Mapping {
+		Segments: req.Segments,
+		SampleItemId: req.SampleItemId,
+		ItemId: req.ItemId,
+	}
+
+	err := s.DB.Create(&mapping).Error
+
+	if err != nil {
+		errorString := fmt.Sprintf("Error storing the mapping: %v", err)
+		return nil, status.Errorf(codes.Unknown, errorString)
+	}
+
+	response := &pb.CreateResponse{
+		Message: "Successfully created a mapping!",
+	}
+
+	return response, nil
 }
