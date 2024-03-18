@@ -1,0 +1,31 @@
+syntax = "proto3";
+package proto;
+option go_package = "sample-manager/proto";
+service SampleManager {
+  rpc CreateMapping (CreateRequest) returns (CreateResponse);
+  rpc GetSampleId (GetRequest) returns (GetResponse);
+  
+}
+
+message CreateRequest {
+  string sample_item_id = 1;
+  repeated string segments = 2;
+  string item_id = 3;
+}
+
+message CreateResponse {
+  string message = 1;
+}
+
+message GetRequest {
+  repeated string clm = 1;
+  string item_id = 2;
+}
+
+message GetResponse {
+  string sample_item_id = 1;
+}
+
+
+// export PATH="$PATH:$(go env GOPATH)/bin"
+// protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative proto/sample-manager.proto
