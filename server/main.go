@@ -68,7 +68,7 @@ func (s *Server) CreateMapping(ctx context.Context, req *pb.CreateRequest) (*pb.
 	}
 
 	response := &pb.CreateResponse{
-		Message: constants.CREATE_MAPPING_SUCCESS,
+		Message: constants.CREATE_MAPPING_SUCCESS_MESSAGE,
 	}
 
 	return response, nil

@@ -47,8 +47,8 @@ func TestCreatingAMapping(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &pb.CreateRequest{
-					Segments: []string{"test_segment1", "test_segment2"},
-					ItemId: "test_item_id",
+					Segments: []string{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO},
+					ItemId: constants.TEST_ITEM_ID,
 					SampleItemId: "test_sample_item_id",
 				},
 			},
@@ -59,12 +59,12 @@ func TestCreatingAMapping(t *testing.T) {
 					"segments",
 					"item_id",
 					"sample_item_id",
-				}).AddRow(1, pq.StringArray{"test_segment1", "test_segment2"}, "test_item_id", "test_sample_item_id")
+				}).AddRow(1, pq.StringArray{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO}, constants.TEST_ITEM_ID, constants.TEST_SAMPLE_ITEM_ID)
 				mock.ExpectQuery("INSERT").WillReturnRows(rows)
 				mock.ExpectCommit()
 			},
 			want: &pb.CreateResponse{
-				Message: constants.CREATE_MAPPING_SUCCESS,
+				Message: constants.CREATE_MAPPING_SUCCESS_MESSAGE,
 			},
 			wantErr: false,
 		},
@@ -122,13 +122,13 @@ func TestGettingASampleID(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &pb.GetRequest{
-					Clm: []string{"test_segment1", "test_segment2"},
-					ItemId: "test_item_id",
+					Clm: []string{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO},
+					ItemId: constants.TEST_ITEM_ID,
 				},
 			},
 			rows: func() {
 				mock.ExpectQuery("SELECT").WillReturnRows(sqlmock.NewRows([]string{"id", "sample_item_id", "item_id", "segments"}).
-					AddRow(1, "1", "test_item_id", pq.StringArray{"test_segment1", "test_segment2"}))
+					AddRow(1, "1", constants.TEST_ITEM_ID, pq.StringArray{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO}))
 			},
 			want: &pb.GetResponse{
 				SampleItemId: "1",
@@ -140,8 +140,8 @@ func TestGettingASampleID(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &pb.GetRequest{
-					Clm: []string{"test_segment1", "test_segment2"},
-					ItemId: "test_item_id",
+					Clm: []string{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO},
+					ItemId: constants.TEST_ITEM_ID,
 				},
 			},
 			rows: func() {
