@@ -16,7 +16,80 @@ import (
 	"gorm.io/gorm"
 )
 
+func TestCreatingAMapping(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	assert.Nil(t, err, "Error creating mock db: %v", err)
 
+	defer db.Close()
+
+	dialect := postgres.New(postgres.Config{
+		Conn:       db,
+		DriverName: "postgres",
+	})
+
+	gormDb, err := gorm.Open(dialect, &gorm.Config{})
+	assert.Nil(t, err, "Error creating mock gorm db: %v", err)
+
+	type args struct {
+		ctx context.Context
+		req *pb.CreateRequest
+	}
+	tests := []struct {
+		name    string
+		args    args
+		rows    func()
+		want    *pb.CreateResponse
+		wantErr bool
+		errorCode codes.Code
+	}{
+		{
+			name: "Creating a mapping - Expect Success",
+			args: args{
+				ctx: context.Background(),
+				req: &pb.CreateRequest{
+					Segments: []string{"test_segment1", "test_segment2"},
+					ItemId: "test_item_id",
+					SampleItemId: "test_sample_item_id",
+				},
+			},
+			rows: func() {
+				mock.ExpectBegin()
+				rows := sqlmock.NewRows([]string{
+					"id",
+					"segments",
+					"item_id",
+					"sample_item_id",
+				}).AddRow(1, pq.StringArray{"test_segment1", "test_segment2"}, "test_item_id", "test_sample_item_id")
+				mock.ExpectQuery("INSERT").WillReturnRows(rows)
+				mock.ExpectCommit()
+			},
+			want: &pb.CreateResponse{
+				Message: constants.CREATE_MAPPING_SUCCESS,
+			},
+			wantErr: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.rows()
+			server := &Server{DB: gormDb} 
+
+			got, err := server.CreateMapping(tt.args.ctx, tt.args.req)
+
+			if (err != nil) != tt.wantErr {
+				t.Fatalf("CreateMapping() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if tt.wantErr {
+				statusErr, ok := status.FromError(err)
+				assert.True(t, ok, "Expected gRPC status error")
+				assert.Equalf(t, tt.errorCode, statusErr.Code(), "Expected %v error", tt.errorCode)
+			} else {
+				assert.Equalf(t, tt.want, got, "CreateMapping(%v, %v)", tt.args.ctx, tt.args.req)
+			}
+		})
+	}
+}
 
 func TestGettingASampleID(t *testing.T) {
 	db, mock, err := sqlmock.New()
