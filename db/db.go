@@ -36,9 +36,15 @@ func Connection() *gorm.DB {
 	return db
 }
 
-func GetSampleID(db *gorm.DB, segments []string, item_id string) (string, error) {
+func GetSampleID(db *gorm.DB, segments []string, itemID string) (string, error) {
 	var sample_item_id string
-	result := db.Where("item_id = ? AND segments = ?", item_id, segments).First(&sample_item_id)
+
+    result := db.Model(&models.Mapping{}).
+	Select("sample_item_id").
+	Joins("JOIN segments ON segments.mapping_id = mappings.id").
+	Where("mappings.item_id = ?", itemID).
+	First(&sample_item_id)
+
 	if result.Error != nil {
 		return "", result.Error
 	}
