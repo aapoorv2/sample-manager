@@ -53,15 +53,9 @@ func (s *Server) GetSampleId(ctx context.Context, req *pb.GetRequest) (*pb.GetRe
 }
 
 func (s *Server) CreateMapping(ctx context.Context, req *pb.CreateRequest) (*pb.CreateResponse, error) {
-	var segments []models.Segment
-	for _, s := range(req.Segments) {
-		segment := models.Segment {
-			Segment: s,
-		}
-		segments = append(segments, segment)
-	}
+	
 	mapping := &models.Mapping {
-		Segments: segments,
+		Segments: req.Segments,
 		SampleItemID: req.SampleItemId,
 		ItemID: req.ItemId,
 	}

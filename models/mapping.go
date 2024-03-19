@@ -1,14 +1,11 @@
 package models
 
-type Segment struct {
-	ID        uint64 `gorm:"primaryKey"`
-	Segment   string
-	MappingID uint64
-}
+import "github.com/lib/pq"
+
 
 type Mapping struct {
 	ID          uint64 `gorm:"primaryKey"`
 	SampleItemID string
 	ItemID       string
-	Segments     []Segment `gorm:"foreignKey:MappingID"`
+	Segments     pq.StringArray `gorm:"type:text[]"`
 }

@@ -2,10 +2,12 @@ package database
 
 import (
 	"fmt"
+	"log"
 	"sample-manager/models"
+
+	"github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
 const (
@@ -28,7 +30,7 @@ func Connection() *gorm.DB {
 
 	log.Println("Connected to the database")
 
-	err = db.AutoMigrate(&models.Mapping{}, &models.Segment{})
+	err = db.AutoMigrate(&models.Mapping{})
 	if err != nil {
 		log.Fatalf("Error migrating Mapping table: %v", err)
 	}
@@ -37,16 +39,12 @@ func Connection() *gorm.DB {
 }
 
 func GetSampleID(db *gorm.DB, segments []string, itemID string) (string, error) {
-	var sample_item_id string
+	var mapping models.Mapping
 
-    result := db.Model(&models.Mapping{}).
-	Select("sample_item_id").
-	Joins("JOIN segments ON segments.mapping_id = mappings.id").
-	Where("mappings.item_id = ?", itemID).
-	First(&sample_item_id)
+	result := db.Where("segments = ?::text[] AND item_id = ?", pq.StringArray(segments), itemID).First(&mapping)
 
 	if result.Error != nil {
 		return "", result.Error
 	}
-	return sample_item_id, nil
+	return mapping.SampleItemID, nil
 }

@@ -105,3 +105,7 @@ func TestCreatingAMapping(t *testing.T) {
 		})
 	}
 }
+
+func TestGettingASampleID(t *testing.T) {
+	
+}
