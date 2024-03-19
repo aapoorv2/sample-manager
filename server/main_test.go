@@ -49,7 +49,7 @@ func TestCreatingAMapping(t *testing.T) {
 				req: &pb.CreateRequest{
 					Segments: []string{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO},
 					ItemId: constants.TEST_ITEM_ID,
-					SampleItemId: "test_sample_item_id",
+					SampleItemId: constants.TEST_SAMPLE_ITEM_ID,
 				},
 			},
 			rows: func() {
