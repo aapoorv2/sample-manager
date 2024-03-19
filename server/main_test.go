@@ -136,7 +136,7 @@ func TestGettingASampleID(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Getting a sample ID when mapping is doesn't exist - Expect Error",
+			name: "Getting a sample ID when mapping doesn't exist - Expect Error",
 			args: args{
 				ctx: context.Background(),
 				req: &pb.GetRequest{
