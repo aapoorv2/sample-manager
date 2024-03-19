@@ -40,11 +40,13 @@ func Connection() *gorm.DB {
 
 func GetSampleID(db *gorm.DB, segments []string, itemID string) (string, error) {
 	var mapping models.Mapping
-
-	result := db.Where("segments = ?::text[] AND item_id = ?", pq.StringArray(segments), itemID).First(&mapping)
-
+	
+	result := db.Raw("SELECT * FROM mappings WHERE ?::text[] && segments AND item_id = ?", pq.StringArray(segments), itemID).Scan(&mapping)
 	if result.Error != nil {
 		return "", result.Error
+	}
+	if mapping.SampleItemID == "" {
+		return "", fmt.Errorf("record not found")
 	}
 	return mapping.SampleItemID, nil
 }
