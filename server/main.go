@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"sample-manager/constants"
 	"sample-manager/models"
 	pb "sample-manager/proto"
 
@@ -52,10 +53,17 @@ func (s *Server) GetSampleId(ctx context.Context, req *pb.GetRequest) (*pb.GetRe
 }
 
 func (s *Server) CreateMapping(ctx context.Context, req *pb.CreateRequest) (*pb.CreateResponse, error) {
+	var segments []models.Segment
+	for _, s := range(req.Segments) {
+		segment := models.Segment {
+			Segment: s,
+		}
+		segments = append(segments, segment)
+	}
 	mapping := &models.Mapping {
-		Segments: req.Segments,
-		SampleItemId: req.SampleItemId,
-		ItemId: req.ItemId,
+		Segments: segments,
+		SampleItemID: req.SampleItemId,
+		ItemID: req.ItemId,
 	}
 
 	err := s.DB.Create(&mapping).Error
@@ -66,7 +74,7 @@ func (s *Server) CreateMapping(ctx context.Context, req *pb.CreateRequest) (*pb.
 	}
 
 	response := &pb.CreateResponse{
-		Message: "Successfully created a mapping!",
+		Message: constants.CREATE_MAPPING_SUCCESS,
 	}
 
 	return response, nil

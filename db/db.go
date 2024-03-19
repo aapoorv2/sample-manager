@@ -11,7 +11,7 @@ import (
 const (
 	host     = "localhost"
 	port     = 5432
-	username = "postgres"
+	username = "abhyudaya.a_ftc"
 	password = "password"
 	dbName   = "samplemanager"
 	sslMode  = "disable"
@@ -28,7 +28,7 @@ func Connection() *gorm.DB {
 
 	log.Println("Connected to the database")
 
-	err = db.AutoMigrate(&models.Mapping{})
+	err = db.AutoMigrate(&models.Mapping{}, &models.Segment{})
 	if err != nil {
 		log.Fatalf("Error migrating Mapping table: %v", err)
 	}
