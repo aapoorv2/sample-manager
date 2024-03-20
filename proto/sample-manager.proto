@@ -18,7 +18,7 @@ message CreateResponse {
 }
 
 message GetRequest {
-  repeated string clm = 1;
+  repeated string segments = 1;
   string item_id = 2;
 }
 

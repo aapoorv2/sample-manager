@@ -122,7 +122,7 @@ func TestGettingASampleID(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &pb.GetRequest{
-					Clm: []string{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO},
+					Segments: []string{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO},
 					ItemId: constants.TEST_ITEM_ID,
 				},
 			},
@@ -140,7 +140,7 @@ func TestGettingASampleID(t *testing.T) {
 			args: args{
 				ctx: context.Background(),
 				req: &pb.GetRequest{
-					Clm: []string{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO},
+					Segments: []string{constants.TEST_SEGMENT_ONE, constants.TEST_SEGMENT_TWO},
 					ItemId: constants.TEST_ITEM_ID,
 				},
 			},

@@ -38,7 +38,7 @@ func main() {
 }
 
 func (s *Server) GetSampleId(ctx context.Context, req *pb.GetRequest) (*pb.GetResponse, error) {
-	sample_item_id, err := database.GetSampleID(s.DB, req.Clm, req.ItemId)
+	sample_item_id, err := database.GetSampleID(s.DB, req.Segments, req.ItemId)
 
 	if err != nil {
 		errorString := fmt.Sprintf("No mapping found: %v", err)
