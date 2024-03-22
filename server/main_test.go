@@ -149,7 +149,7 @@ func TestGettingASampleID(t *testing.T) {
 			},
 			want: nil,
 			wantErr: true,
-			errorCode: codes.Unavailable,
+			errorCode: codes.InvalidArgument,
 		},
 	}
 

@@ -42,7 +42,7 @@ func (s *Server) GetSampleId(ctx context.Context, req *pb.GetRequest) (*pb.GetRe
 
 	if err != nil {
 		errorString := fmt.Sprintf("No mapping found: %v", err)
-		return nil, status.Error(codes.Unavailable, errorString)
+		return nil, status.Error(codes.InvalidArgument, errorString)
 	}
 
 	resp := pb.GetResponse {
